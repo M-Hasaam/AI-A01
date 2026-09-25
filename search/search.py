@@ -190,7 +190,34 @@ def greedyBestFirstSearch(problem: SearchProblem, heuristic=nullHeuristic):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.PriorityQueue()
+    startState = problem.getStartState()
+    hVal = heuristic(startState, problem)
+    frontier.push((startState, [], 0), 0 + hVal)
+    explored = set()
+    bestCost = {startState: 0}
+
+    while not frontier.isEmpty():
+        state, actions, gCost = frontier.pop()
+
+        if problem.isGoalState(state):
+            return actions
+
+        if state in explored:
+            continue
+
+        explored.add(state)
+
+        for successor, action, stepCost in problem.getSuccessors(state):
+            newGCost = gCost + stepCost
+            if successor not in explored:
+                if successor not in bestCost or newGCost < bestCost[successor]:
+                    bestCost[successor] = newGCost
+                    hSucc = heuristic(successor, problem)
+                    fCost = newGCost + hSucc
+                    frontier.push((successor, actions + [action], newGCost), fCost)
+
+    return []
 
 
 # Abbreviations
