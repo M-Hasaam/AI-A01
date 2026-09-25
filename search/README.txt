@@ -71,17 +71,24 @@ python pacman.py -l CustomSearch -p SearchAgent -a fn=astar,heuristic=manhattanH
 python autograder.py
 
 --- Helper Utility Script (run.py) ---
-For convenience, a custom `run.py` script is included to quickly execute tests on the custom maze and run specific tasks:
-python run.py dfs         (Runs DFS on CustomSearch)
-python run.py bfs         (Runs BFS on CustomSearch)
-python run.py ucs         (Runs UCS on CustomSearch)
-python run.py gbfs        (Runs GBFS on CustomSearch)
-python run.py astar       (Runs A* on CustomSearch)
-python run.py task6-tiny  (Runs Corners Problem on tinyCorners)
-python run.py task6-medium(Runs Corners Problem on mediumCorners)
-python run.py task7       (Runs Food Search on trickySearch)
-python run.py task8       (Runs Closest Dot Agent on bigSearch)
-python run.py all         (Runs autograder.py)
+For convenience, a custom `run.py` script is included to quickly execute tests dynamically.
+Usage: python run.py [algorithm] [layout] [--fast]
+
+[algorithm] options: dfs, bfs, ucs, gbfs, astar
+[layout] shortcuts: tiny, medium, big, custom (defaults to mediumMaze)
+
+Examples:
+python run.py dfs               (Runs DFS on mediumMaze)
+python run.py bfs big           (Runs BFS on bigMaze)
+python run.py astar custom      (Runs A* on CustomSearch)
+
+Other Tasks:
+python run.py task6-tiny        (Runs Corners Problem on tinyCorners)
+python run.py task6-medium      (Runs Corners Problem on mediumCorners)
+python run.py task7             (Runs Food Search on trickySearch)
+python run.py task8             (Runs Closest Dot Agent on bigSearch)
+python run.py all               (Runs autograder.py)
+
 * Add --fast to any command to skip GUI animations.
 
 ==============================================================================
