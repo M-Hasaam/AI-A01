@@ -161,6 +161,32 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+def greedyBestFirstSearch(problem: SearchProblem, heuristic=nullHeuristic):
+    """Search the node that has the lowest heuristic value first (greedy)."""
+    frontier = util.PriorityQueue()
+    startState = problem.getStartState()
+    hVal = heuristic(startState, problem)
+    frontier.push((startState, []), hVal)
+    explored = set()
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if state in explored:
+            continue
+
+        explored.add(state)
+
+        if problem.isGoalState(state):
+            return actions
+
+        for successor, action, stepCost in problem.getSuccessors(state):
+            if successor not in explored:
+                hSucc = heuristic(successor, problem)
+                frontier.push((successor, actions + [action]), hSucc)
+
+    return []
+
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
@@ -172,3 +198,4 @@ bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+gbfs = greedyBestFirstSearch
