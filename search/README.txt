@@ -70,6 +70,20 @@ python pacman.py -l CustomSearch -p SearchAgent -a fn=astar,heuristic=manhattanH
 --- Run All Autograder Tests ---
 python autograder.py
 
+--- Helper Utility Script (run.py) ---
+For convenience, a custom `run.py` script is included to quickly execute tests on the custom maze and run specific tasks:
+python run.py dfs         (Runs DFS on CustomSearch)
+python run.py bfs         (Runs BFS on CustomSearch)
+python run.py ucs         (Runs UCS on CustomSearch)
+python run.py gbfs        (Runs GBFS on CustomSearch)
+python run.py astar       (Runs A* on CustomSearch)
+python run.py task6-tiny  (Runs Corners Problem on tinyCorners)
+python run.py task6-medium(Runs Corners Problem on mediumCorners)
+python run.py task7       (Runs Food Search on trickySearch)
+python run.py task8       (Runs Closest Dot Agent on bigSearch)
+python run.py all         (Runs autograder.py)
+* Add --fast to any command to skip GUI animations.
+
 ==============================================================================
 AUTOGRADER RESULTS: 25/25 (100%)
 ==============================================================================
