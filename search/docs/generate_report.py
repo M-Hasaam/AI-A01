@@ -100,11 +100,31 @@ def create_report():
     )
     
     doc.add_heading('5.1 Screenshots & Comparison', level=2)
-    doc.add_paragraph("[INSERT SCREENSHOT OF GBFS ON CUSTOM MAZE HERE]")
+    doc.add_paragraph("GBFS:")
+    if os.path.exists('image/gbfs.png'):
+        doc.add_picture('image/gbfs.png', width=Inches(6))
     doc.add_paragraph("GBFS gets easily misled by the heuristic, heading into the deceptive dead end and expanding many unnecessary nodes.")
     
-    doc.add_paragraph('\n[INSERT SCREENSHOT OF A* ON CUSTOM MAZE HERE]')
+    doc.add_paragraph('\nA* Search:')
+    if os.path.exists('image/astar.png'):
+        doc.add_picture('image/astar.png', width=Inches(6))
     doc.add_paragraph("A* correctly backtracks earlier because the g(n) cost grows, overcoming the misleading h(n) heuristic. It finds the optimal path.")
+    
+    doc.add_page_break()
+    doc.add_heading('5.2 Other Algorithms on Custom Maze', level=2)
+    for algo in ['dfs', 'bfs', 'ucs']:
+        doc.add_paragraph(f"{algo.upper()}:")
+        if os.path.exists(f'image/{algo}.png'):
+            doc.add_picture(f'image/{algo}.png', width=Inches(5))
+            
+    doc.add_page_break()
+    doc.add_heading('6. Additional Tasks', level=1)
+    tasks = [('Task 6 (Tiny Corners)', 'task6-tiny'), ('Task 6 (Medium Corners)', 'task6-medium'), 
+             ('Task 7 (Food Search)', 'task7'), ('Task 8 (Closest Dot Agent)', 'task8')]
+    for title, img_name in tasks:
+        doc.add_paragraph(f"{title}:")
+        if os.path.exists(f'image/{img_name}.png'):
+            doc.add_picture(f'image/{img_name}.png', width=Inches(5))
     
     doc.save('report.docx')
     print("report.docx successfully generated.")
