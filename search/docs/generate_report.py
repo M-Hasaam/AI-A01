@@ -29,8 +29,6 @@ def create_report():
     doc.add_page_break()
     
     # ---------------------------------------------------------
-    # 1. INTRODUCTION
-    # ---------------------------------------------------------
     doc.add_heading('1. Introduction', level=1)
     doc.add_paragraph(
         "This comprehensive report details the implementation, execution, and critical analysis of various "
@@ -45,6 +43,15 @@ def create_report():
         "We systematically tested these algorithms across a variety of state-space formulations, ranging from "
         "simple position searches to highly complex multi-goal scenarios like the Corners Problem and Food Search."
     )
+    
+    doc.add_heading('1.1 Division of Labor', level=2)
+    doc.add_paragraph(
+        "As a group of three, we divided the project tasks to ensure a collaborative and balanced workload. "
+        "The responsibilities were distributed as follows:"
+    )
+    doc.add_paragraph("• Muhammad Hasaam (24i-3107): Implemented the core uninformed search algorithms (DFS, BFS, UCS) and designed the custom adversarial maze (CustomSearch.lay) for algorithm testing.")
+    doc.add_paragraph("• Abdullah (24i-3001): Implemented the informed search algorithms (Greedy Best-First Search, A* Search) and engineered the underlying heuristics (Manhattan, Euclidean) used to guide them.")
+    doc.add_paragraph("• Umer (24i-3002): Handled the complex multi-goal formulations (Corners Problem, Food Search Problem, Closest Dot Agent) and compiled the final academic report and documentation.")
     
     # ---------------------------------------------------------
     # 2. STATE SPACE REPRESENTATION
