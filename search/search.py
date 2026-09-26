@@ -58,6 +58,9 @@ class SearchProblem:
 
 # ======================== CSV TRACE LOGGER ========================
 
+# Counts logger instances so files created within the same microsecond stay unique
+_log_counter = 0
+
 class CSVLogger:
     """
     Automated CSV trace logger for search algorithms.
@@ -76,13 +79,19 @@ class CSVLogger:
         # Determine the evidence directory path (relative to search.py location)
         self.evidence_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'evidence')
         os.makedirs(self.evidence_dir, exist_ok=True)
-        # Build a unique filename based on algorithm name and timestamp
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        # Build a unique filename from algorithm name, timestamp (with microseconds)
+        # and a run counter, so repeated searches (e.g. ClosestDotSearchAgent's
+        # many BFS calls) never overwrite each other's logs
+        global _log_counter
+        _log_counter += 1
+        now = time.time()
+        timestamp = time.strftime("%Y%m%d_%H%M%S", time.localtime(now))
+        micros = int((now % 1) * 1_000_000)
         # Extract problem type name for more descriptive filenames
         problem_name = type(problem).__name__
         self.filename = os.path.join(
             self.evidence_dir,
-            f"{algorithm_name}_{problem_name}_{timestamp}.csv"
+            f"{algorithm_name}_{problem_name}_{timestamp}_{micros:06d}_{_log_counter:03d}.csv"
         )
 
     def log(self, expanded_state, parent, action, generated_successors,
@@ -127,25 +136,25 @@ class CSVLogger:
 
 
 def _get_frontier_states_stack(frontier):
-    """Extract states from a Stack frontier for logging (limited to first 20)."""
+    """Extract states from a Stack frontier for logging (full frontier)."""
     try:
-        return [str(item[0]) for item in frontier.list[-20:]]
+        return [str(item[0]) for item in frontier.list]
     except Exception:
         return ['<unavailable>']
 
 
 def _get_frontier_states_queue(frontier):
-    """Extract states from a Queue frontier for logging (limited to first 20)."""
+    """Extract states from a Queue frontier for logging (full frontier)."""
     try:
-        return [str(item[0]) for item in frontier.list[-20:]]
+        return [str(item[0]) for item in frontier.list]
     except Exception:
         return ['<unavailable>']
 
 
 def _get_frontier_states_pq(frontier):
-    """Extract states from a PriorityQueue frontier for logging (limited to first 20)."""
+    """Extract states from a PriorityQueue frontier for logging (full frontier)."""
     try:
-        return [str(item[2][0]) for item in frontier.heap[:20]]
+        return [str(item[2][0]) for item in frontier.heap]
     except Exception:
         return ['<unavailable>']
 
