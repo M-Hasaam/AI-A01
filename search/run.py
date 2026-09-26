@@ -36,8 +36,8 @@ def print_help():
     print("  python run.py dfs               (Runs DFS on mediumMaze by default)")
     print("  python run.py dfs tiny          (Runs DFS on tinyMaze)")
     print("  python run.py dfs big           (Runs DFS on bigMaze)")
-    print("  python run.py dfs custom        (Runs DFS on CustomSearch)")
-    print("  python run.py astar CustomSearch (Runs A* on CustomSearch)")
+    print("  python run.py dfs custom        (Runs DFS on i243107Search)")
+    print("  python run.py astar i243107Search (Runs A* on i243107Search)")
     print("\nOther Tasks:")
     print("  task6-tiny, task6-medium, task7, task8, all")
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
         if layout in ["tiny", "medium", "big"]:
             layout = layout + "Maze"
         elif layout == "custom":
-            layout = "CustomSearch"
+            layout = "i243107Search"
             
     cmd = get_command(algo, layout, fast)
     

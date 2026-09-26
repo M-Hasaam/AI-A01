@@ -1,12 +1,12 @@
-"""Test all 5 algorithms on CustomSearch maze layout."""
+"""Test all 5 algorithms on i243107Search maze layout."""
 import pacman
 import layout as layoutModule
 import search
 import searchAgents
 
-lay = layoutModule.getLayout('CustomSearch')
+lay = layoutModule.getLayout('i243107Search')
 if lay is None:
-    raise RuntimeError("Could not find CustomSearch layout")
+    raise RuntimeError("Could not find i243107Search layout")
 
 gameState = pacman.GameState()
 gameState.initialize(lay, 0)
