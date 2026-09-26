@@ -1,0 +1,3 @@
+iteration,expanded_state,parent,action,generated_successors,frontier_before,frontier_after,explored,g,h,f
+1,"(3, 8)",None,Start,"[((3, 9), 'North'), ((2, 8), 'West')]",[],"['(2, 8)', '(3, 9)']","[(3, 8)]",0,0,0
+2,"(3, 9)","(3, 8)",North,[],"['(2, 8)']","['(2, 8)']","[(3, 8), (3, 9)]",1,0,1

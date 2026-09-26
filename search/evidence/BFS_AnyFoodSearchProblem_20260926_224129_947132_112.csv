@@ -1,0 +1,3 @@
+iteration,expanded_state,parent,action,generated_successors,frontier_before,frontier_after,explored,g,h,f
+1,"(14, 4)",None,Start,"[((14, 5), 'North'), ((14, 3), 'South')]",[],"['(14, 3)', '(14, 5)']","[(14, 4)]",0,0,0
+2,"(14, 5)","(14, 4)",North,[],"['(14, 3)']","['(14, 3)']","[(14, 4), (14, 5)]",1,0,1

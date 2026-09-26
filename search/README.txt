@@ -3,7 +3,9 @@
 ==============================================================================
 
 Python Version: 3.12.10
-OS: Windows 11
+OS: Microsoft Windows 11 Pro (build 26200), 64-bit
+CPU: AMD Ryzen 7 7735U with Radeon Graphics (8 cores / 16 threads)
+RAM: 32 GB
 
 ==============================================================================
 FILES MODIFIED:
@@ -18,14 +20,17 @@ FILES MODIFIED:
 
 2. searchAgents.py
    - Implemented: CornersProblem (state space formulation with visited corners)
-   - Implemented: cornersHeuristic (greedy nearest-unvisited-corner Manhattan)
-   - Implemented: foodHeuristic (max Manhattan distance + pairwise food distances)
+   - Implemented: cornersHeuristic (exact shortest Manhattan tour over unvisited
+     corners; admissible and consistent)
+   - Implemented: foodHeuristic (maze distance to nearest food + MST weight over
+     remaining food, maze distances via cached BFS; trickySearch: 255 nodes)
    - Implemented: AnyFoodSearchProblem.isGoalState (food position check)
    - Implemented: ClosestDotSearchAgent.findPathToClosestDot (via BFS)
 
-3. layouts/CustomSearch.lay
-   - Custom maze with multiple dead ends, decision branches, and deceptive
-     corridors designed to highlight differences between GBFS and A*.
+3. layouts/i243107Search.lay
+   - Custom maze with multiple dead ends, decision branches, and a deceptive
+     bait corridor aimed at the food. GBFS takes the bait (cost 78) while
+     BFS, UCS and A* find the optimal path (cost 42).
 
 ==============================================================================
 RUN COMMANDS:
@@ -43,6 +48,9 @@ python pacman.py -l bigMaze -z .5 -p SearchAgent -a fn=bfs
 --- Task 3: Uniform-Cost Search (UCS) ---
 python pacman.py -l mediumMaze -p SearchAgent -a fn=ucs
 python pacman.py -l mediumDottedMaze -p StayEastSearchAgent
+Note: the mediumDenselyMaze and stayEastSearch layouts named in the assignment
+are not included in the starter layouts/, so mediumDottedMaze with
+StayEastSearchAgent / StayWestSearchAgent is used to test varying step costs.
 python pacman.py -l mediumScaryMaze -p StayWestSearchAgent
 
 --- Task 4: Greedy Best-First Search (GBFS) ---
@@ -61,11 +69,11 @@ python pacman.py -l trickySearch -p AStarFoodSearchAgent
 python pacman.py -l bigSearch -p ClosestDotSearchAgent -z .5
 
 --- Custom Maze ---
-python pacman.py -l CustomSearch -p SearchAgent -a fn=dfs
-python pacman.py -l CustomSearch -p SearchAgent -a fn=bfs
-python pacman.py -l CustomSearch -p SearchAgent -a fn=ucs
-python pacman.py -l CustomSearch -p SearchAgent -a fn=gbfs,heuristic=manhattanHeuristic
-python pacman.py -l CustomSearch -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
+python pacman.py -l i243107Search -p SearchAgent -a fn=dfs
+python pacman.py -l i243107Search -p SearchAgent -a fn=bfs
+python pacman.py -l i243107Search -p SearchAgent -a fn=ucs
+python pacman.py -l i243107Search -p SearchAgent -a fn=gbfs,heuristic=manhattanHeuristic
+python pacman.py -l i243107Search -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
 
 --- Run All Autograder Tests ---
 python autograder.py
@@ -80,7 +88,7 @@ Usage: python run.py [algorithm] [layout] [--fast]
 Examples:
 python run.py dfs               (Runs DFS on mediumMaze)
 python run.py bfs big           (Runs BFS on bigMaze)
-python run.py astar custom      (Runs A* on CustomSearch)
+python run.py astar custom      (Runs A* on i243107Search)
 
 Other Tasks:
 python run.py task6-tiny        (Runs Corners Problem on tinyCorners)
@@ -92,7 +100,7 @@ python run.py all               (Runs autograder.py)
 * Add --fast to any command to skip GUI animations.
 
 ==============================================================================
-AUTOGRADER RESULTS: 25/25 (100%)
+AUTOGRADER RESULTS: 26/25 (100% + 1 extra credit)
 ==============================================================================
 Question q1 (DFS):              3/3
 Question q2 (BFS):              3/3
@@ -100,8 +108,8 @@ Question q3 (UCS):              3/3
 Question q4 (A*):               3/3
 Question q5 (CornersProblem):   3/3
 Question q6 (cornersHeuristic): 3/3
-Question q7 (foodHeuristic):    4/4
+Question q7 (foodHeuristic):    5/4  (extra credit: 255 nodes on trickySearch)
 Question q8 (closestDot):       3/3
                               ------
-Total:                         25/25
+Total:                         26/25
 ==============================================================================
