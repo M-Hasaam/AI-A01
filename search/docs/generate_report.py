@@ -1,4 +1,12 @@
 import os
+
+# Paths are resolved from this file so the script works from any directory
+DOCS_DIR = os.path.dirname(os.path.abspath(__file__))
+SCREENSHOTS_DIR = os.path.join(DOCS_DIR, '..', 'evidence', 'screenshots')
+
+def shot(name):
+    """Returns the path of a screenshot in evidence/screenshots/."""
+    return os.path.join(SCREENSHOTS_DIR, name)
 from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
@@ -138,20 +146,20 @@ def create_report():
     
     doc.add_heading('4.1 GBFS Execution', level=2)
     doc.add_paragraph("As seen below, GBFS takes the bait. It explores the entire right-side dead end because it visually looks closer to the goal:")
-    if os.path.exists('image/gbfs.png'):
-        doc.add_picture('image/gbfs.png', width=Inches(6))
+    if os.path.exists(shot('gbfs.png')):
+        doc.add_picture(shot('gbfs.png'), width=Inches(6))
     else:
-        doc.add_paragraph("[MISSING: image/gbfs.png]")
+        doc.add_paragraph("[MISSING: evidence/screenshots/gbfs.png]")
     
     doc.add_heading('4.2 A* Search Execution', level=2)
     doc.add_paragraph(
         "A*, on the other hand, factors in the growing path cost g(n). As it steps deeper into the trap, f(n) increases. "
         "It quickly realizes the trap is inefficient, abandons the dead end early, and finds the optimal path:"
     )
-    if os.path.exists('image/astar.png'):
-        doc.add_picture('image/astar.png', width=Inches(6))
+    if os.path.exists(shot('astar.png')):
+        doc.add_picture(shot('astar.png'), width=Inches(6))
     else:
-        doc.add_paragraph("[MISSING: image/astar.png]")
+        doc.add_paragraph("[MISSING: evidence/screenshots/astar.png]")
         
     doc.add_page_break()
     
@@ -166,18 +174,18 @@ def create_report():
     
     doc.add_heading('5.1 Depth-First Search (DFS)', level=2)
     doc.add_paragraph("DFS finds a solution, but as expected, it is a highly inefficient, winding path. It blindly follows walls until it hits the target.")
-    if os.path.exists('image/dfs.png'):
-        doc.add_picture('image/dfs.png', width=Inches(6))
+    if os.path.exists(shot('dfs.png')):
+        doc.add_picture(shot('dfs.png'), width=Inches(6))
         
     doc.add_heading('5.2 Breadth-First Search (BFS)', level=2)
     doc.add_paragraph("BFS reliably finds the optimal path. However, because it radiates outward in all directions evenly, the red search nodes show that it exhaustively explored a massive portion of the maze to guarantee optimality.")
-    if os.path.exists('image/bfs.png'):
-        doc.add_picture('image/bfs.png', width=Inches(6))
+    if os.path.exists(shot('bfs.png')):
+        doc.add_picture(shot('bfs.png'), width=Inches(6))
 
     doc.add_heading('5.3 Uniform-Cost Search (UCS)', level=2)
     doc.add_paragraph("Because step costs are uniform (1) in this maze, UCS behaves identically to BFS, expanding the exact same nodes and returning the same optimal path.")
-    if os.path.exists('image/ucs.png'):
-        doc.add_picture('image/ucs.png', width=Inches(6))
+    if os.path.exists(shot('ucs.png')):
+        doc.add_picture(shot('ucs.png'), width=Inches(6))
 
     doc.add_page_break()
     
@@ -192,20 +200,20 @@ def create_report():
     doc.add_heading('6.1 Corners Problem (Task 6)', level=2)
     doc.add_paragraph("We implemented a state representation that tracks visited corners and designed a custom heuristic that estimates the distance to the farthest unvisited corner. This drastically reduced the number of expanded nodes compared to standard UCS.")
     
-    if os.path.exists('image/task6-tiny.png'):
-        doc.add_picture('image/task6-tiny.png', width=Inches(5))
-    if os.path.exists('image/task6-medium.png'):
-        doc.add_picture('image/task6-medium.png', width=Inches(5))
+    if os.path.exists(shot('task6-tiny.png')):
+        doc.add_picture(shot('task6-tiny.png'), width=Inches(5))
+    if os.path.exists(shot('task6-medium.png')):
+        doc.add_picture(shot('task6-medium.png'), width=Inches(5))
 
     doc.add_heading('6.2 Eating All The Dots (Task 7)', level=2)
     doc.add_paragraph("The Food Search problem required A* to find an optimal path that consumes every single dot. Our heuristic calculates the maximum distance to the furthest dot, sometimes utilizing maze distance approximations to remain admissible while providing strong guidance.")
-    if os.path.exists('image/task7.png'):
-        doc.add_picture('image/task7.png', width=Inches(6))
+    if os.path.exists(shot('task7.png')):
+        doc.add_picture(shot('task7.png'), width=Inches(6))
 
     doc.add_heading('6.3 Suboptimal Search: Closest Dot Agent (Task 8)', level=2)
     doc.add_paragraph("Finding the true optimal path for all dots is NP-Hard. As a practical alternative, we implemented an agent that repeatedly uses BFS to find and eat the nearest dot. While not strictly optimal overall, it computes a highly efficient path in a fraction of the time.")
-    if os.path.exists('image/task8.png'):
-        doc.add_picture('image/task8.png', width=Inches(6))
+    if os.path.exists(shot('task8.png')):
+        doc.add_picture(shot('task8.png'), width=Inches(6))
         
     # ---------------------------------------------------------
     # 7. CONCLUSION
@@ -217,7 +225,7 @@ def create_report():
         "Ultimately, A* Search, when paired with a well-designed, admissible heuristic, provided the perfect balance—yielding optimal solutions with highly efficient node expansion."
     )
 
-    doc.save('report.docx')
+    doc.save(os.path.join(DOCS_DIR, 'report.docx'))
     print("Super detailed report.docx successfully generated.")
 
 if __name__ == '__main__':
