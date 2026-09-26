@@ -30,6 +30,7 @@ from game import Agent
 from game import Actions
 import util
 import time
+import itertools
 import search
 import pacman
 
@@ -303,7 +304,8 @@ class CornersProblem(search.SearchProblem):
         """
         successors = []
         currentPosition, visitedCorners = state
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+        # Mandatory successor expansion order: North -> East -> South -> West
+        for action in [Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]:
             x, y = currentPosition
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
@@ -354,18 +356,23 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     if not unvisitedCorners:
         return 0
 
-    totalDistance = 0
-    currentPos = position
-    remaining = list(unvisitedCorners)
+    # Exact shortest Manhattan tour: try every visiting order of the unvisited
+    # corners (at most 4! = 24) and take the cheapest.
+    # Admissible: Manhattan distance never exceeds true maze distance, so the
+    # cheapest Manhattan tour is a lower bound on the cheapest real tour.
+    # Consistent: one step moves the tour's start by 1, so h changes by at most 1;
+    # stepping onto a corner only removes a leg of length 0.
+    best = None
+    for order in itertools.permutations(unvisitedCorners):
+        tourLength = 0
+        currentPos = position
+        for corner in order:
+            tourLength += util.manhattanDistance(currentPos, corner)
+            currentPos = corner
+        if best is None or tourLength < best:
+            best = tourLength
 
-    while remaining:
-        distances = [(util.manhattanDistance(currentPos, corner), corner) for corner in remaining]
-        nearestDist, nearestCorner = min(distances)
-        totalDistance += nearestDist
-        currentPos = nearestCorner
-        remaining.remove(nearestCorner)
-
-    return totalDistance
+    return best
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
