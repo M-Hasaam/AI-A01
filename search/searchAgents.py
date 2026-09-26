@@ -464,26 +464,62 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+    # h = (maze distance to the nearest food) + (MST weight over all remaining food),
+    # with edge weights = true maze distances.
+    # Admissible: any path that eats every dot must first reach some dot (>= nearest)
+    # and then walk a route connecting all dots, which is a spanning tree (>= MST).
+    # Consistent: a step changes the nearest-food term by at most 1; eating dot f
+    # lowers the MST by at most d(f, g) for its nearest remaining dot g, which the
+    # new nearest-food term d(f, g) pays back.
     position, foodGrid = state
     foodList = foodGrid.asList()
 
     if not foodList:
         return 0
 
-    maxDist = 0
+    # Maze distances from each food dot to every reachable cell, cached across calls
+    distCache = problem.heuristicInfo.setdefault('distances', {})
     for food in foodList:
-        dist = util.manhattanDistance(position, food)
-        if dist > maxDist:
-            maxDist = dist
+        if food not in distCache:
+            distCache[food] = _bfsDistances(problem.walls, food)
 
-    if len(foodList) > 1:
-        for i in range(len(foodList)):
-            for j in range(i + 1, len(foodList)):
-                pairDist = util.manhattanDistance(foodList[i], foodList[j])
-                if pairDist > maxDist:
-                    maxDist = pairDist
+    nearest = min(distCache[food][position] for food in foodList)
 
-    return maxDist
+    # MST weight depends only on the remaining food set, so cache it per set
+    mstCache = problem.heuristicInfo.setdefault('mst', {})
+    foodKey = frozenset(foodList)
+    if foodKey not in mstCache:
+        mstCache[foodKey] = _mstWeight(foodList, distCache)
+
+    return nearest + mstCache[foodKey]
+
+def _bfsDistances(walls, source):
+    """Returns a dict of maze distances from source to every reachable cell (BFS)."""
+    distances = {source: 0}
+    queue = util.Queue()
+    queue.push(source)
+    while not queue.isEmpty():
+        x, y = queue.pop()
+        for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+            nextPos = (x + dx, y + dy)
+            if not walls[nextPos[0]][nextPos[1]] and nextPos not in distances:
+                distances[nextPos] = distances[(x, y)] + 1
+                queue.push(nextPos)
+    return distances
+
+def _mstWeight(nodes, distCache):
+    """Prim's algorithm: total weight of the minimum spanning tree over nodes."""
+    inTree = {nodes[0]}
+    # Cheapest known edge from the tree to each node outside it
+    cheapest = {node: distCache[nodes[0]][node] for node in nodes[1:]}
+    total = 0
+    while cheapest:
+        node = min(cheapest, key=cheapest.get)
+        total += cheapest.pop(node)
+        inTree.add(node)
+        for other in cheapest:
+            cheapest[other] = min(cheapest[other], distCache[node][other])
+    return total
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
